@@ -1,0 +1,34 @@
+---
+import { Picture } from 'astro:assets';
+import { photo } from '../data/photos';
+
+interface Props {
+  slug: string;
+  /** Override the stored alt text (use "" for purely decorative use). */
+  alt?: string;
+  sizes?: string;
+  class?: string;
+  /** Classes for the <img> itself (object-position etc.). */
+  imgClass?: string;
+  eager?: boolean;
+  widths?: number[];
+}
+
+const { slug, alt, sizes = '(min-width: 768px) 50vw, 100vw', class: cls, imgClass = '', eager = false, widths = [480, 800, 1200, 1600] } = Astro.props;
+const p = photo(slug);
+const usable = widths.filter((w) => w <= p.src.width);
+if (!usable.length) usable.push(p.src.width);
+---
+
+<Picture
+  src={p.src}
+  alt={alt ?? p.alt}
+  formats={['avif', 'webp']}
+  widths={usable}
+  sizes={sizes}
+  loading={eager ? 'eager' : 'lazy'}
+  fetchpriority={eager ? 'high' : 'auto'}
+  decoding={eager ? 'sync' : 'async'}
+  pictureAttributes={{ class: cls }}
+  class:list={['h-full w-full object-cover', imgClass]}
+/>

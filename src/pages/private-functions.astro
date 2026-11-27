@@ -1,0 +1,130 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import Photo from '../components/Photo.astro';
+import Eyebrow from '../components/Eyebrow.astro';
+import FaqList from '../components/FaqList.astro';
+import EnquiryCTA from '../components/EnquiryCTA.astro';
+import { site, prices } from '../data/site';
+import { faqsFor, faqSchema } from '../data/faq';
+
+const crumbs = [{ name: 'Private Functions', href: '/private-functions/' }];
+const faqs = faqsFor('functions');
+
+const occasions = [
+  { slug: 'pink-party-head-table', t: ['Birthdays', '& milestones'], d: '21sts, 30ths, 50ths and 70ths. Balloon walls, a dressed head table and a dance floor for when the speeches are done.' },
+  { slug: 'baby-shower-balloon-arch', t: ['Baby', 'showers'], d: 'Soft colours, a dessert table and space for games and gifts, with the garden just outside.' },
+  { slug: 'womens-day-brunch', t: ['Brunches', '& high teas'], d: 'Women’s Day brunches, kitchen teas and bridal showers. Round tables in your colours and a grazing spread from our kitchen.' },
+  { slug: 'farewell-party-balloons', t: ['Farewells', '& graduations'], d: 'Send-offs, graduations and award evenings, with a podium and sound for the speeches.' },
+  { slug: 'tall-white-floral-centrepieces', t: ['Year-end', 'functions'], d: 'Thank the team properly. A dinner, a band or a DJ, and nobody has to clean the office afterwards.' },
+  { slug: 'banquet-long-tables', t: ['Family', 'gatherings'], d: 'Reunions, anniversaries, memorial teas and family celebrations, for 20 people or for 210.' },
+];
+
+const service = {
+  '@context': 'https://schema.org',
+  '@type': 'Service',
+  name: 'Private function venue hire',
+  serviceType: 'Function venue',
+  provider: { '@id': `${site.url}/#venue` },
+  areaServed: 'Pietermaritzburg, KwaZulu-Natal',
+  description: 'Private function venue for birthdays, baby showers, brunches, farewells, year-end parties and family gatherings of up to 210 guests.',
+};
+---
+
+<Base
+  title="Function Venue in Pietermaritzburg | Birthdays, Showers & Year-Ends"
+  description="Birthdays, baby showers, brunches, farewells and year-end parties at Buhle Country Estate, a private function venue near Pietermaritzburg for up to 210 guests."
+  crumbs={crumbs}
+  schema={[service, faqSchema(faqs)]}
+>
+  <PageHero
+    slug="pink-birthday-backdrop"
+    imgClass="object-[50%_40%]"
+    kicker="Private functions near Pietermaritzburg"
+    lines={[{ t: 'Every reason' }, { t: 'to celebrate.', i: true }]}
+    intro="Birthdays, baby showers, brunches, farewells and year-end parties. Bring the guest list and we’ll handle the room, the food and the clean-up."
+    crumbs={crumbs}
+  />
+
+  <section data-tone="light" class="on-paper bg-paper py-28 md:py-36">
+    <div class="mx-auto grid max-w-[1500px] gap-16 px-5 md:grid-cols-12 md:px-14">
+      <div class="md:col-span-6">
+        <Eyebrow n="i.">Your party, our place</Eyebrow>
+        <h2 class="display mt-6 text-[clamp(40px,4.8vw,82px)] text-ink" data-reveal>
+          <span class="block">A private venue</span> <span class="it block text-cocoa">for the people</span> <span class="block">you love.</span>
+        </h2>
+      </div>
+      <div class="space-y-5 text-ink/80 md:col-span-6 md:pt-16" data-reveal style="--d:.1s">
+        <p>
+          When you book Buhle Country Estate, the venue is yours. No other functions run on the day. The hall seats up to {site.capacity} guests and can
+          be set to feel full for a smaller group, with glass doors onto the garden for photographs and fresh air.
+        </p>
+        <p>
+          Our kitchen caters everything from a light brunch spread to a three-course dinner, with menus from {prices.cateringPp} per guest. Our event
+          coordinator can style the room in your colours or work with your own decorator.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section data-tone="light" class="on-paper bg-cream py-28 md:py-36">
+    <div class="mx-auto max-w-[1500px] px-5 md:px-14">
+      <Eyebrow n="ii.">Occasions we host</Eyebrow>
+      <h2 class="display mt-6 text-[clamp(40px,4.4vw,74px)] text-ink" data-reveal>
+        <span class="block">Big days,</span> <span class="it block text-cocoa">small days, all days.</span>
+      </h2>
+      <div class="mt-16 grid gap-x-8 gap-y-16 sm:grid-cols-2 lg:grid-cols-3">
+        {
+          occasions.map((o, i) => (
+            <article data-reveal style={`--d:${(i % 3) * 0.1}s`}>
+              <div class="aspect-[4/5] overflow-hidden">
+                <Photo slug={o.slug} sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw" />
+              </div>
+              <h3 class="display mt-6 text-[clamp(32px,2.6vw,42px)] text-ink">
+                {o.t[0]} <span class="it text-cocoa">{o.t[1]}</span>
+              </h3>
+              <p class="mt-3 text-ink/75">{o.d}</p>
+            </article>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <section data-tone="dark" class="bg-ink py-28 text-paper md:py-36">
+    <div class="mx-auto grid max-w-[1500px] items-center gap-16 px-5 md:grid-cols-2 md:px-14">
+      <div>
+        <Eyebrow n="iii." class="text-gold-light">What you can add</Eyebrow>
+        <h2 class="display mt-6 text-[clamp(40px,4.4vw,74px)]" data-reveal>
+          <span class="block">Food, drinks</span> <span class="it block text-gold-light">&amp; the finishing touches.</span>
+        </h2>
+        <ul class="mt-10 grid gap-x-8 text-[16px] text-paper/85 sm:grid-cols-2">
+          {['Buffet or plated menus', 'Grazing & brunch spreads', 'Arrival drinks & canapés', 'Wine on the tables or a full bar', 'Cakes & dessert tables', 'Décor in your colours', 'A stage & podium for speeches', 'Event coordination'].map((x, i) => (
+            <li class="flex gap-3 border-b border-paper/15 py-4" data-reveal style={`--d:${(i % 2) * 0.06}s`}>
+              <span class="mt-2.5 size-1.5 shrink-0 rotate-45 bg-gold" aria-hidden="true" />{x}
+            </li>
+          ))}
+        </ul>
+        <a href="/catering/" class="btn btn-gold mt-10">See the <em>menus</em></a>
+      </div>
+      <div class="grid grid-cols-2 gap-3">
+        <div class="aspect-[3/4] overflow-hidden" data-reveal><Photo slug="baby-shower-cake" sizes="(min-width: 768px) 25vw, 50vw" /></div>
+        <div class="mt-16 aspect-[3/4] overflow-hidden" data-reveal style="--d:.12s"><Photo slug="pink-party-table" sizes="(min-width: 768px) 25vw, 50vw" /></div>
+      </div>
+    </div>
+  </section>
+
+  <section data-tone="light" class="on-paper bg-paper py-28 md:py-36">
+    <div class="mx-auto grid max-w-[1500px] gap-14 px-5 md:grid-cols-12 md:px-14">
+      <div class="md:col-span-4">
+        <Eyebrow n="iv.">Function questions</Eyebrow>
+        <h2 class="display mt-6 text-[clamp(40px,4vw,66px)] text-ink" data-reveal>
+          <span class="block">Planning</span> <span class="it block text-cocoa">a party?</span>
+        </h2>
+      </div>
+      <div class="md:col-span-8"><FaqList items={faqs} /></div>
+    </div>
+  </section>
+
+  <EnquiryCTA slug="balloon-arch-chandelier" title={[{ t: 'Tell us what' }, { t: 'you’re celebrating.', i: true }]} />
+</Base>

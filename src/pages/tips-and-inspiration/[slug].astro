@@ -1,0 +1,77 @@
+---
+import { getImage } from 'astro:assets';
+import Base from '../../layouts/Base.astro';
+import PageHero from '../../components/PageHero.astro';
+import Photo from '../../components/Photo.astro';
+import Arrow from '../../components/Arrow.astro';
+import EnquiryCTA from '../../components/EnquiryCTA.astro';
+import { articles, type Article } from '../../data/articles';
+import { photo } from '../../data/photos';
+import { site } from '../../data/site';
+
+export function getStaticPaths() {
+  return articles.map((a) => ({ params: { slug: a.slug }, props: { article: a } }));
+}
+
+const { article: a } = Astro.props as { article: Article };
+const crumbs = [
+  { name: 'Tips & Inspiration', href: '/tips-and-inspiration/' },
+  { name: a.lines.map((l) => l.t).join(' '), href: `/tips-and-inspiration/${a.slug}/` },
+];
+const share = await getImage({ src: photo(a.hero).src, format: 'jpg', width: 1200, height: 630, fit: 'cover' });
+const others = articles.filter((x) => x.slug !== a.slug).slice(0, 3);
+
+const posting = {
+  '@context': 'https://schema.org',
+  '@type': 'BlogPosting',
+  headline: a.title,
+  description: a.description,
+  image: new URL(share.src, site.url).href,
+  datePublished: a.published,
+  dateModified: a.published,
+  inLanguage: 'en-ZA',
+  mainEntityOfPage: `${site.url}/tips-and-inspiration/${a.slug}/`,
+  author: { '@type': 'Organization', name: site.name, url: `${site.url}/` },
+  publisher: { '@id': `${site.url}/#venue` },
+};
+const date = new Date(a.published).toLocaleDateString('en-ZA', { day: 'numeric', month: 'long', year: 'numeric' });
+---
+
+<Base title={`${a.title} | Buhle Estate`} description={a.description} crumbs={crumbs} schema={[posting]} type="article" image={share.src} imageAlt={photo(a.hero).alt}>
+  <PageHero slug={a.hero} imgClass={a.heroPos} kicker={a.kicker} lines={a.lines} intro={a.excerpt} crumbs={crumbs} />
+
+  <article data-tone="light" class="on-paper bg-paper py-20 md:py-28">
+    <div class="mx-auto max-w-[760px] px-5">
+      <p class="caps flex flex-wrap gap-x-4 text-umber">
+        <span>{a.category}</span><span aria-hidden="true">·</span><time datetime={a.published}>{date}</time><span aria-hidden="true">·</span><span>{a.readMins} min read</span>
+      </p>
+      <div class="prose-buhle mt-10 text-[18px] text-ink/85" set:html={a.body} />
+      <div class="mt-16 flex flex-wrap items-center justify-between gap-6 border-t border-ink/15 pt-8">
+        <a href={a.related.href} class="btn btn-ink">{a.related.label} <Arrow /></a>
+        <a href="/tips-and-inspiration/" class="caps link-arrow text-cocoa">All tips &amp; inspiration</a>
+      </div>
+    </div>
+  </article>
+
+  <section data-tone="light" class="on-paper bg-cream py-24" aria-labelledby="more-title">
+    <div class="mx-auto max-w-[1500px] px-5 md:px-14">
+      <h2 id="more-title" class="display text-[clamp(36px,3.6vw,56px)] text-ink">Keep <span class="it text-cocoa">reading</span></h2>
+      <div class="mt-12 grid gap-8 md:grid-cols-3">
+        {
+          others.map((o) => (
+            <article class="group">
+              <a href={`/tips-and-inspiration/${o.slug}/`} class="block aspect-[4/3] overflow-hidden" tabindex="-1" aria-hidden="true">
+                <Photo slug={o.hero} sizes="(min-width: 768px) 33vw, 100vw" imgClass="transition-transform duration-[1400ms] ease-silk group-hover:scale-105" />
+              </a>
+              <h3 class="display mt-5 text-[30px] text-ink">
+                <a href={`/tips-and-inspiration/${o.slug}/`} class="hover:text-cocoa">{o.lines.map((l) => <span class:list={['block', { it: l.i }]}>{l.t} </span>)}</a>
+              </h3>
+            </article>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <EnquiryCTA />
+</Base>

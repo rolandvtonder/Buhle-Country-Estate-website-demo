@@ -1,0 +1,33 @@
+---
+import Photo from './Photo.astro';
+import { site, whatsappLink } from '../data/site';
+
+interface Props {
+  slug?: string;
+  title?: { t: string; i?: boolean }[];
+  text?: string;
+}
+const {
+  slug = 'reception-hall-country-view',
+  title = [{ t: 'Come and see' }, { t: 'it for yourself.', i: true }],
+  text = 'Walk the gardens, stand in the hall and meet the people who will look after your day. Viewings are by appointment, and we’ll send a tailored quote afterwards.',
+} = Astro.props;
+---
+
+<section class="relative overflow-hidden bg-ink text-paper" data-tone="dark">
+  <div class="absolute inset-0 opacity-45">
+    <Photo slug={slug} alt="" sizes="100vw" imgClass="object-[50%_35%]" />
+  </div>
+  <div class="absolute inset-0 bg-[linear-gradient(90deg,rgb(28_19_13/0.9),rgb(28_19_13/0.55))]"></div>
+  <div class="relative mx-auto max-w-[1500px] px-5 py-28 md:px-14 md:py-36">
+    <h2 class="display text-[clamp(44px,6.4vw,108px)]" data-reveal>
+      {title.map((l) => <span class:list={['block', { it: l.i }]}>{l.t} </span>)}
+    </h2>
+    <p class="mt-8 max-w-[52ch] text-paper/85" data-reveal style="--d:.1s">{text}</p>
+    <div class="mt-10 flex flex-wrap gap-3" data-reveal style="--d:.2s">
+      <a href="/contact/#enquire" class="btn btn-gold">Book a <em>viewing</em></a>
+      <a href={whatsappLink('Hi Buhle Estate, I would like to book a viewing.')} class="btn btn-line text-paper" rel="noopener" target="_blank">WhatsApp us</a>
+      <a href={`tel:${site.phones[0].tel}`} class="btn btn-line text-paper">Call {site.phones[0].display}</a>
+    </div>
+  </div>
+</section>

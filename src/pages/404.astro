@@ -1,0 +1,19 @@
+---
+import Base from '../layouts/Base.astro';
+import Photo from '../components/Photo.astro';
+import { nav } from '../data/site';
+---
+
+<Base title="Page not found | Buhle Country Estate" description="This page has moved or no longer exists. Find weddings, conferences, functions and contact details for Buhle Country Estate." noindex>
+  <section data-tone="dark" class="relative flex min-h-svh items-center overflow-hidden bg-ink text-paper">
+    <div class="absolute inset-0 opacity-35"><Photo slug="garden-ceremony-aisle" alt="" sizes="100vw" eager /></div>
+    <div class="relative mx-auto w-full max-w-[1500px] px-5 py-32 md:px-14">
+      <p class="caps text-gold-light">Error 404</p>
+      <h1 class="display mt-5 text-[clamp(52px,8vw,140px)]"><span class="block">Off the</span> <span class="it block">beaten path.</span></h1>
+      <p class="mt-8 max-w-[46ch] text-paper/85">The page you were looking for has moved or no longer exists. Try one of these instead:</p>
+      <ul class="mt-8 flex flex-wrap gap-3">
+        {nav.slice(0, 6).map((n) => <li><a href={n.href} class="btn btn-line text-paper">{n.label}</a></li>)}
+      </ul>
+    </div>
+  </section>
+</Base>

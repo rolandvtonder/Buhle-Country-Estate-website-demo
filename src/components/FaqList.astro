@@ -1,0 +1,18 @@
+---
+import type { Faq } from '../data/faq';
+interface Props { items: Faq[]; tone?: 'light' | 'dark' }
+const { items, tone = 'light' } = Astro.props;
+---
+<div class:list={['faq divide-y border-y', tone === 'light' ? 'divide-ink/15 border-ink/15' : 'divide-paper/20 border-paper/20']}>
+  {
+    items.map((f) => (
+      <details class="group">
+        <summary class="flex min-h-14 items-start justify-between gap-6 py-6">
+          <h3 class="font-display text-[clamp(22px,2vw,28px)] leading-tight">{f.q}</h3>
+          <span class="plus mt-1 text-[26px] leading-none" aria-hidden="true">+</span>
+        </summary>
+        <div class:list={['max-w-[68ch] pb-7 text-[16px]', tone === 'light' ? 'text-ink/80' : 'text-paper/80']} set:html={f.a} />
+      </details>
+    ))
+  }
+</div>

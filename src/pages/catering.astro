@@ -1,0 +1,153 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import Photo from '../components/Photo.astro';
+import Eyebrow from '../components/Eyebrow.astro';
+import FaqList from '../components/FaqList.astro';
+import EnquiryCTA from '../components/EnquiryCTA.astro';
+import { prices } from '../data/site';
+import { faqsFor, faqSchema } from '../data/faq';
+
+const crumbs = [{ name: 'Catering & Menus', href: '/catering/' }];
+const faqs = faqsFor('catering');
+
+const courses: { name: string; pick: string; items: string[] }[] = [
+  { name: 'Starters', pick: 'Choose one', items: ['Smoked salmon & cream cheese', 'Calamari lemoné', 'Butternut or mushroom soup cups with bread rolls', 'Pan-fried fish on asparagus with basil pesto'] },
+  { name: 'Mains · red meat', pick: 'Choose one', items: ['Rosemary & garlic roasted leg of lamb with brown onion gravy', 'Beef stroganoff', 'Traditional beef curry with poppadum'] },
+  { name: 'Mains · white meat', pick: 'Choose one', items: ['Chicken à la king', 'Butter chicken', 'Traditional chicken curry with poppadum', 'Roast chicken with JailBreak sauce', 'Pan-fried hake with lemon butter'] },
+  { name: 'Vegetables & salads', pick: 'Choose two', items: ['Seasonal vegetable medley', 'Sautéed spinach with mushrooms & peppers', 'Cinnamon-roasted butternut', 'Greek salad', 'Sambals', 'Fruity coleslaw'] },
+  { name: 'Starches', pick: 'Choose two', items: ['Basmati rice', 'Creamy mash', 'Baby potatoes in herb butter'] },
+  { name: 'Desserts', pick: 'Choose two', items: ['Individual lemon cheesecake', 'Individual vanilla hazelnut', 'Individual chocolate mousse', 'Individual Black Forest'] },
+];
+
+const menuSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'Menu',
+  name: 'Buhle Country Estate function menu',
+  inLanguage: 'en-ZA',
+  offers: { '@type': 'Offer', price: '320', priceCurrency: 'ZAR', description: 'Menus from R320 per guest' },
+  hasMenuSection: courses.map((c) => ({
+    '@type': 'MenuSection',
+    name: c.name,
+    description: c.pick,
+    hasMenuItem: c.items.map((i) => ({ '@type': 'MenuItem', name: i })),
+  })),
+};
+---
+
+<Base
+  title="Wedding & Function Catering, Pietermaritzburg | Buhle Estate"
+  description="In-house wedding and function catering at Buhle Country Estate, from the team behind Jailbreak Caterers. Buffet and plated menus from R320 per guest."
+  crumbs={crumbs}
+  schema={[menuSchema, faqSchema(faqs)]}
+>
+  <PageHero
+    slug="high-tea-station"
+    imgClass="object-[50%_55%]"
+    kicker="In-house catering"
+    lines={[{ t: 'Made in' }, { t: 'our kitchen.', i: true }]}
+    intro="Our catering started long before the venue. Jailbreak Caterers opened in 2005 and has grown to a team of more than 70 people. That same kitchen cooks for every event at Buhle."
+    crumbs={crumbs}
+  />
+
+  <section data-tone="light" class="on-paper bg-paper py-28 md:py-36">
+    <div class="mx-auto grid max-w-[1500px] gap-16 px-5 md:grid-cols-12 md:px-14">
+      <div class="md:col-span-6">
+        <Eyebrow n="i.">Catering at Buhle</Eyebrow>
+        <h2 class="display mt-6 text-[clamp(40px,4.8vw,82px)] text-ink" data-reveal>
+          <span class="block">Generous food,</span> <span class="it block text-cocoa">served properly.</span>
+        </h2>
+      </div>
+      <div class="space-y-5 text-ink/80 md:col-span-6 md:pt-16" data-reveal style="--d:.1s">
+        <p>
+          Our owner, Nobuhle Mchunu, studied accounting, then earned a diploma in food preparation at Capsicum before founding Jailbreak Caterers. The menus here reflect that:
+          South African favourites done well, classic plated dishes, and desserts that come out individually rather than as a tray.
+        </p>
+        <p>
+          Menus start from <strong>{prices.cateringPp} per guest</strong> and include cutlery, crockery, glassware (hi-ball and wine), chafing dishes,
+          tables and linen for the serving points, waiting staff, and one or two buffet stations depending on your numbers.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Menu -->
+  <section data-tone="dark" class="bg-ink py-28 text-paper md:py-36" aria-labelledby="menu-title">
+    <div class="mx-auto max-w-[1300px] px-5 md:px-14">
+      <div class="text-center">
+        <p class="caps text-gold-light">Sample wedding &amp; function menu</p>
+        <h2 id="menu-title" class="display mt-5 text-[clamp(48px,6vw,104px)]" data-reveal>
+          <span class="block">The</span> <span class="it block text-gold-light">menu.</span>
+        </h2>
+        <p class="mx-auto mt-6 max-w-[52ch] text-paper/75">From {prices.cateringPp} per guest. Pick from each course, or ask us to design a menu to order.</p>
+      </div>
+      <div class="mt-20 grid gap-x-16 gap-y-14 md:grid-cols-2">
+        {
+          courses.map((c, i) => (
+            <div data-reveal style={`--d:${(i % 2) * 0.08}s`}>
+              <div class="flex items-baseline justify-between gap-4 border-b border-gold/40 pb-3">
+                <h3 class="display text-[clamp(30px,2.6vw,40px)]">{c.name}</h3>
+                <p class="caps shrink-0 text-gold-light">{c.pick}</p>
+              </div>
+              <ul class="mt-5 space-y-3">
+                {c.items.map((it) => (
+                  <li class="font-display text-[21px] leading-snug text-paper/90">{it}</li>
+                ))}
+              </ul>
+            </div>
+          ))
+        }
+      </div>
+      <p class="mx-auto mt-20 max-w-[60ch] text-center text-[15px] text-paper/65">
+        Extras on request: arrival drinks, canapés, wine on the tables or a full bar. Dietary requirements can be accommodated with notice, as they aren’t part
+        of the standard menus.
+      </p>
+    </div>
+  </section>
+
+  <section data-tone="light" class="on-paper bg-cream py-28 md:py-36">
+    <div class="mx-auto max-w-[1500px] px-5 md:px-14">
+      <Eyebrow n="ii.">Beyond the wedding menu</Eyebrow>
+      <h2 class="display mt-6 text-[clamp(40px,4.4vw,74px)] text-ink" data-reveal>
+        <span class="block">Brunches, teas</span> <span class="it block text-cocoa">&amp; conference days.</span>
+      </h2>
+      <div class="mt-16 grid gap-10 md:grid-cols-3">
+        {
+          [
+            { slug: 'sandwich-platters', t: 'Brunch & grazing', d: 'Croissants, sandwich and wrap platters, fruit, pastries and sweet treats. Ideal for showers, brunches and Women’s Day events.' },
+            { slug: 'breakfast-croissants', t: 'Conference catering', d: 'Coffee and tea on arrival, a morning tea with eats, lunch and afternoon tea, included in our conference day packages.' },
+            { slug: 'sparkling-welcome-drinks', t: 'Drinks & canapés', d: 'Welcome drinks as guests arrive, canapés during photos, and wine or a full bar through the evening.' },
+          ].map((x, i) => (
+            <article data-reveal style={`--d:${i * 0.1}s`}>
+              <div class="aspect-[4/5] overflow-hidden"><Photo slug={x.slug} sizes="(min-width: 768px) 33vw, 100vw" /></div>
+              <h3 class="display mt-6 text-[clamp(30px,2.4vw,40px)] text-ink">{x.t}</h3>
+              <p class="mt-3 text-ink/75">{x.d}</p>
+            </article>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <section data-tone="dark" class="bg-ink py-3">
+    <div class="grid grid-cols-2 gap-3 px-3 md:grid-cols-6">
+      {['roast-vegetable-medley', 'beef-curry', 'canape-platter', 'plated-desserts', 'tropical-fruit-platter', 'dessert-shooter-station'].map((s) => (
+        <div class="aspect-square overflow-hidden"><Photo slug={s} sizes="(min-width: 768px) 17vw, 50vw" /></div>
+      ))}
+    </div>
+  </section>
+
+  <section data-tone="light" class="on-paper bg-paper py-28 md:py-36">
+    <div class="mx-auto grid max-w-[1500px] gap-14 px-5 md:grid-cols-12 md:px-14">
+      <div class="md:col-span-4">
+        <Eyebrow n="iii.">Catering questions</Eyebrow>
+        <h2 class="display mt-6 text-[clamp(40px,4vw,66px)] text-ink" data-reveal>
+          <span class="block">Hungry</span> <span class="it block text-cocoa">for more?</span>
+        </h2>
+      </div>
+      <div class="md:col-span-8"><FaqList items={faqs} /></div>
+    </div>
+  </section>
+
+  <EnquiryCTA slug="cheesecake-dessert" title={[{ t: 'Plan your' }, { t: 'menu with us.', i: true }]} text={`Tell us your guest numbers and the style of meal you have in mind, and we’ll put together a menu and quote. Menus from ${prices.cateringPp} per guest.`} />
+</Base>

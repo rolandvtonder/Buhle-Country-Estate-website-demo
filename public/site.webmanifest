@@ -1,0 +1,13 @@
+{
+  "name": "Buhle Country Estate",
+  "short_name": "Buhle Estate",
+  "description": "Wedding, function and conference venue in Bishopstowe, Pietermaritzburg.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#1c130d",
+  "theme_color": "#1c130d",
+  "icons": [
+    { "src": "/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "/icon-512.png", "sizes": "512x512", "type": "image/png" }
+  ]
+}

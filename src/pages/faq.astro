@@ -1,0 +1,58 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import FaqList from '../components/FaqList.astro';
+import EnquiryCTA from '../components/EnquiryCTA.astro';
+import { faqs, faqSchema } from '../data/faq';
+import { site } from '../data/site';
+
+const crumbs = [{ name: 'FAQ', href: '/faq/' }];
+const groups = [...new Set(faqs.map((f) => f.group))];
+const slug = (s: string) => s.toLowerCase().replace(/[^a-z]+/g, '-').replace(/-$/, '');
+---
+
+<Base
+  title="FAQ | Booking a Venue at Buhle Country Estate, Pietermaritzburg"
+  description="Answers about booking Buhle Country Estate: capacity, wedding and conference prices, what’s included, catering, outside suppliers and how to find us."
+  crumbs={crumbs}
+  schema={[faqSchema(faqs)]}
+>
+  <PageHero
+    slug="table-number-white-roses"
+    imgClass="object-[50%_45%]"
+    kicker="Frequently asked questions"
+    lines={[{ t: 'Questions,' }, { t: 'answered.', i: true }]}
+    intro="Everything couples, hosts and event planners usually ask us before they book. If your question isn’t here, call or WhatsApp us and we’ll help."
+    crumbs={crumbs}
+  />
+
+  <section data-tone="light" class="on-paper bg-paper py-24 md:py-32">
+    <div class="mx-auto grid max-w-[1500px] gap-14 px-5 md:grid-cols-12 md:px-14">
+      <nav class="md:col-span-3" aria-label="FAQ topics">
+        <div class="sticky top-28">
+          <p class="caps text-umber">Topics</p>
+          <ul class="mt-4 space-y-1">
+            {groups.map((g) => <li><a href={`#${slug(g)}`} class="inline-block py-1.5 font-display text-[22px] text-ink hover:text-cocoa">{g}</a></li>)}
+          </ul>
+          <p class="mt-10 text-[15px] text-ink/70">
+            Still wondering? Call <a class="underline" href={`tel:${site.phones[0].tel}`}>{site.phones[0].display}</a> or email
+            <a class="underline" href={`mailto:${site.email}`}>{site.email}</a>.
+          </p>
+        </div>
+      </nav>
+      <div class="space-y-20 md:col-span-9">
+        {
+          groups.map((g, i) => (
+            <section id={slug(g)} class="scroll-mt-28" aria-labelledby={`${slug(g)}-h`}>
+              <p class="caps text-umber">0{i + 1}</p>
+              <h2 id={`${slug(g)}-h`} class="display mt-2 mb-8 text-[clamp(36px,3.6vw,60px)] text-ink">{g}</h2>
+              <FaqList items={faqs.filter((f) => f.group === g)} />
+            </section>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <EnquiryCTA />
+</Base>

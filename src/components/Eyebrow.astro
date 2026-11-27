@@ -1,0 +1,10 @@
+---
+/** Small numbered label above a section heading, like the reference's menu numbers. */
+interface Props { n?: string; class?: string }
+const { n, class: cls = 'text-umber' } = Astro.props;
+---
+<p class:list={['caps flex items-center gap-3', cls]}>
+  {n && <span class="font-display text-[15px] tracking-normal italic normal-case">{n}</span>}
+  <span class="h-px w-8 bg-current opacity-60" aria-hidden="true"></span>
+  <slot />
+</p>

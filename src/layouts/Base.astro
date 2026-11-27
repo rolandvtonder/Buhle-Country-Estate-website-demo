@@ -1,0 +1,168 @@
+---
+import '../styles/global.css';
+import { site } from '../data/site';
+import Header from '../components/Header.astro';
+import Menu from '../components/Menu.astro';
+import Footer from '../components/Footer.astro';
+
+export interface Crumb {
+  name: string;
+  href: string;
+}
+
+interface Props {
+  /** Full <title>. Keep it under ~60 characters with the main keyword first. */
+  title: string;
+  /** Meta description, ~140–160 characters. */
+  description: string;
+  /** Social share image (absolute path under /public, or an imported image URL). */
+  image?: string;
+  imageAlt?: string;
+  type?: 'website' | 'article';
+  /** Breadcrumb trail after Home, for structured data. */
+  crumbs?: Crumb[];
+  /** Extra JSON-LD objects for this page (FAQPage, Service, Article…). */
+  schema?: object[];
+  noindex?: boolean;
+  /** Image to preload for the hero (largest contentful paint). */
+  preload?: { src: string; srcset?: string; sizes?: string };
+}
+
+const {
+  title,
+  description,
+  image = '/og-buhle-estate.jpg',
+  imageAlt = 'Buhle Country Estate reception hall with a view of the Bishopstowe hills',
+  type = 'website',
+  crumbs = [],
+  schema = [],
+  noindex = false,
+  preload,
+} = Astro.props;
+
+// Canonical always points at the real domain, even on the client demo.
+const pagePath = '/' + Astro.url.pathname.slice(import.meta.env.BASE_URL.length).replace(/^\//, '');
+const canonical = new URL(pagePath, site.url).href;
+// The GitHub Pages demo must never be indexed; the live site is.
+const isDemo = import.meta.env.BASE_URL !== '/';
+// Share images load from wherever this build is served (live domain or demo).
+const baseUrl = import.meta.env.BASE_URL;
+const ogImage = new URL(image.startsWith(baseUrl) ? image : baseUrl.replace(/\/$/, '') + image, Astro.site).href;
+
+const venue = {
+  '@context': 'https://schema.org',
+  '@type': ['EventVenue', 'LocalBusiness'],
+  '@id': `${site.url}/#venue`,
+  name: site.name,
+  alternateName: site.shortName,
+  description: site.description,
+  url: `${site.url}/`,
+  logo: `${site.url}/buhle-estate-logo.png`,
+  image: `${site.url}/og-buhle-estate.jpg`,
+  email: site.email,
+  telephone: site.phones.map((p) => p.tel),
+  priceRange: 'From R150 per person',
+  currenciesAccepted: 'ZAR',
+  maximumAttendeeCapacity: site.capacity,
+  address: {
+    '@type': 'PostalAddress',
+    streetAddress: site.address.street,
+    addressLocality: `${site.address.locality}, ${site.address.city}`,
+    addressRegion: site.address.region,
+    postalCode: site.address.postalCode,
+    addressCountry: site.address.country,
+  },
+  hasMap: `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(site.mapsQuery)}`,
+  areaServed: ['Pietermaritzburg', 'KwaZulu-Natal Midlands', 'Durban', 'KwaZulu-Natal'],
+  sameAs: [site.socials.facebook, site.socials.instagram],
+  amenityFeature: [
+    { '@type': 'LocationFeatureSpecification', name: 'In-house catering', value: true },
+    { '@type': 'LocationFeatureSpecification', name: 'Garden ceremony space', value: true },
+    { '@type': 'LocationFeatureSpecification', name: 'Conference equipment', value: true },
+    { '@type': 'LocationFeatureSpecification', name: 'Event coordinator', value: true },
+  ],
+};
+
+const website = {
+  '@context': 'https://schema.org',
+  '@type': 'WebSite',
+  '@id': `${site.url}/#website`,
+  url: `${site.url}/`,
+  name: site.name,
+  inLanguage: 'en-ZA',
+  publisher: { '@id': `${site.url}/#venue` },
+};
+
+const breadcrumb =
+  crumbs.length > 0
+    ? {
+        '@context': 'https://schema.org',
+        '@type': 'BreadcrumbList',
+        itemListElement: [{ name: 'Home', href: '/' }, ...crumbs].map((c, i) => ({
+          '@type': 'ListItem',
+          position: i + 1,
+          name: c.name,
+          item: new URL(c.href, site.url).href,
+        })),
+      }
+    : null;
+
+const jsonld = [venue, website, ...(breadcrumb ? [breadcrumb] : []), ...schema];
+---
+
+<!doctype html>
+<html lang="en-ZA">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    {noindex || isDemo ? <meta name="robots" content="noindex, follow" /> : <meta name="robots" content="index, follow, max-image-preview:large" />}
+    <meta name="theme-color" content="#1c130d" />
+    <meta name="geo.region" content="ZA-KZN" />
+    <meta name="geo.placename" content="Bishopstowe, Pietermaritzburg" />
+
+    <meta property="og:type" content={type} />
+    <meta property="og:site_name" content={site.name} />
+    <meta property="og:locale" content="en_ZA" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:image:alt" content={imageAlt} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
+
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Libre+Caslon+Condensed:ital,wght@0,400..700;1,400..700&family=Jost:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    {preload && <link rel="preload" as="image" href={preload.src} imagesrcset={preload.srcset} imagesizes={preload.sizes} fetchpriority="high" />}
+
+    {jsonld.map((obj) => <script type="application/ld+json" set:html={JSON.stringify(obj)} />)}
+    <slot name="head" />
+  </head>
+  <body>
+    <a href="#main" class="skip-link btn btn-gold">Skip to content</a>
+    <Header />
+    <main id="main">
+      <slot />
+    </main>
+    <Footer />
+    <Menu />
+    <div class="grain" aria-hidden="true"></div>
+    <script>
+      import '../scripts/site.ts';
+    </script>
+  </body>
+</html>

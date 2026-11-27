@@ -1,0 +1,48 @@
+---
+import Photo from './Photo.astro';
+import type { Crumb } from '../layouts/Base.astro';
+
+export type Line = { t: string; i?: boolean };
+
+interface Props {
+  /** Headline lines; `i` lines are set in italic, like the reference. */
+  lines: Line[];
+  /** Short label above the headline, e.g. "Weddings in Pietermaritzburg". */
+  kicker: string;
+  intro?: string;
+  slug: string;
+  imgClass?: string;
+  crumbs: Crumb[];
+}
+
+const { lines, kicker, intro, slug, imgClass = '', crumbs } = Astro.props;
+---
+
+<section data-hero data-tone="dark" class="relative h-[88svh] min-h-[560px] overflow-hidden bg-ink text-paper">
+  <div data-hero-stage class="absolute inset-0 origin-center will-change-transform">
+    <Photo slug={slug} sizes="100vw" eager class="absolute inset-0" imgClass={imgClass} />
+    <div class="absolute inset-0 bg-[linear-gradient(90deg,rgb(28_19_13/0.72),rgb(28_19_13/0.25)_60%,transparent)]"></div>
+    <div class="absolute inset-x-0 bottom-0 h-1/2 bg-[linear-gradient(0deg,rgb(28_19_13/0.75),transparent)]"></div>
+
+    <div class="relative mx-auto flex h-full max-w-[1500px] flex-col justify-end px-5 pb-[clamp(96px,14vh,140px)] md:px-14">
+      <nav aria-label="Breadcrumb" class="mb-6">
+        <ol class="caps flex flex-wrap items-center gap-2 text-paper/75">
+          <li><a href="/" class="hover:text-gold-light">Home</a></li>
+          {
+            crumbs.map((c, i) => (
+              <li class="flex items-center gap-2">
+                <span aria-hidden="true">/</span>
+                {i === crumbs.length - 1 ? <span aria-current="page" class="text-gold-light">{c.name}</span> : <a href={c.href} class="hover:text-gold-light">{c.name}</a>}
+              </li>
+            ))
+          }
+        </ol>
+      </nav>
+      <p class="caps mb-5 text-gold-light">{kicker}</p>
+      <h1 class="display max-w-[14ch] text-[clamp(50px,8vw,132px)] drop-shadow-[0_4px_30px_rgb(0_0_0/0.35)]">
+        {lines.map((l, i) => <span class:list={['block', { it: l.i, 'pl-[1.2em]': i === 0 && lines.length > 2 }]}>{l.t} </span>)}
+      </h1>
+      {intro && <p class="mt-8 max-w-[52ch] text-[17px] text-paper/90 md:ml-[clamp(0px,14vw,260px)]">{intro}</p>}
+    </div>
+  </div>
+</section>

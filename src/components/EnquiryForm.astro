@@ -1,0 +1,66 @@
+---
+import { site } from '../data/site';
+import Arrow from './Arrow.astro';
+
+interface Props { preset?: string }
+const { preset = '' } = Astro.props;
+
+const types = ['Wedding', 'Conference or training', 'Birthday or milestone', 'Baby shower or bridal shower', 'Year-end or corporate function', 'Family gathering', 'Other'];
+const field = 'mt-2 block w-full min-h-12 border-0 border-b border-ink/30 bg-transparent px-0 py-2.5 text-[17px] text-ink placeholder:text-ink/40 focus:border-cocoa focus:ring-0 focus:outline-none aria-[invalid=true]:border-red-700';
+const label = 'caps text-umber';
+const err = 'mt-1.5 min-h-5 text-[14px] text-red-800';
+---
+
+<form data-enquiry data-key={site.web3formsKey} data-email={site.email} novalidate class="on-paper grid gap-x-8 gap-y-6 md:grid-cols-2">
+  <input type="hidden" name="access_key" value={site.web3formsKey} />
+  <input type="hidden" name="subject" value="New event enquiry from buhleestate.co.za" />
+  <input type="hidden" name="from_name" value="Buhle Estate website" />
+  <input type="checkbox" name="botcheck" class="hidden" tabindex="-1" autocomplete="off" aria-hidden="true" />
+
+  <p data-status role="status" aria-live="polite" class="md:col-span-2 text-[15px] empty:hidden data-[tone=error]:bg-red-50 data-[tone=error]:text-red-900 data-[tone=ok]:bg-linen data-[tone=ok]:text-ink p-4"></p>
+
+  <div>
+    <label for="f-name" class={label}>Your name <span aria-hidden="true">*</span></label>
+    <input id="f-name" name="name" type="text" required autocomplete="name" class={field} aria-describedby="f-name-error" />
+    <p id="f-name-error" class={err}></p>
+  </div>
+  <div>
+    <label for="f-email" class={label}>Email address <span aria-hidden="true">*</span></label>
+    <input id="f-email" name="email" type="email" required autocomplete="email" inputmode="email" class={field} aria-describedby="f-email-error" />
+    <p id="f-email-error" class={err}></p>
+  </div>
+  <div>
+    <label for="f-phone" class={label}>Phone or WhatsApp <span aria-hidden="true">*</span></label>
+    <input id="f-phone" name="phone" type="tel" required autocomplete="tel" inputmode="tel" pattern="[0-9+ ()\-]{9,}" class={field} aria-describedby="f-phone-error" />
+    <p id="f-phone-error" class={err}></p>
+  </div>
+  <div>
+    <label for="f-type" class={label}>Type of event <span aria-hidden="true">*</span></label>
+    <select id="f-type" name="event_type" required class={field} aria-describedby="f-type-error">
+      <option value="" disabled selected={!preset}>Choose one</option>
+      {types.map((t) => <option selected={t === preset}>{t}</option>)}
+    </select>
+    <p id="f-type-error" class={err}></p>
+  </div>
+  <div>
+    <label for="f-date" class={label}>Preferred date</label>
+    <input id="f-date" name="event_date" type="date" class={field} aria-describedby="f-date-hint f-date-error" />
+    <p id="f-date-hint" class="mt-1.5 text-[14px] text-ink/60">Leave blank if you’re still deciding.</p>
+    <p id="f-date-error" class={err}></p>
+  </div>
+  <div>
+    <label for="f-guests" class={label}>Number of guests</label>
+    <input id="f-guests" name="guests" type="number" min="1" max="210" inputmode="numeric" class={field} aria-describedby="f-guests-hint f-guests-error" />
+    <p id="f-guests-hint" class="mt-1.5 text-[14px] text-ink/60">The hall seats up to 210.</p>
+    <p id="f-guests-error" class={err}></p>
+  </div>
+  <div class="md:col-span-2">
+    <label for="f-message" class={label}>Tell us about your event</label>
+    <textarea id="f-message" name="message" rows="4" class={field} placeholder="The style you have in mind, whether you need catering, if you’d like a viewing…" aria-describedby="f-message-error"></textarea>
+    <p id="f-message-error" class={err}></p>
+  </div>
+  <div class="flex flex-wrap items-center gap-5 md:col-span-2">
+    <button type="submit" class="btn btn-ink disabled:opacity-50 disabled:cursor-wait">Send <em>enquiry</em> <Arrow /></button>
+    <p class="text-[14px] text-ink/60">Fields marked * are required. We reply within one working day.</p>
+  </div>
+</form>

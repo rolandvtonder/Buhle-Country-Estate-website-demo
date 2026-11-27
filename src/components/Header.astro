@@ -1,0 +1,38 @@
+---
+import { Image } from 'astro:assets';
+import mark from '../assets/brand/buhle-mark.png';
+---
+
+<!-- Brand: the gold mandala stays gold; the wordmark flips between paper and
+     cocoa depending on whether a dark or light section sits under it. -->
+<a
+  href="/"
+  id="brand"
+  data-tone="dark"
+  class="group fixed top-4 left-4 z-[55] flex items-center gap-3 px-2 py-1.5 transition-colors duration-500 data-[scrolled=true]:backdrop-blur-md data-[scrolled=true]:data-[tone=dark]:bg-ink/45 data-[scrolled=true]:data-[tone=light]:bg-paper/80 md:top-6 md:left-10"
+  aria-label="Buhle Country Estate, home"
+>
+  <Image src={mark} alt="" width={44} height={44} class="size-10 md:size-11" loading="eager" />
+  <span class="flex flex-col leading-none text-paper transition-colors duration-500 group-data-[tone=light]:text-cocoa" aria-hidden="true">
+    <span class="font-display text-[22px] tracking-[0.18em] uppercase">Buhle</span>
+    <span class="caps mt-1 text-[9px]! tracking-[0.5em]!">Estate</span>
+  </span>
+</a>
+
+<button
+  id="menu-toggle"
+  type="button"
+  aria-expanded="false"
+  aria-controls="site-menu"
+  class="caps fixed top-4 right-4 z-[55] flex min-h-12 items-center gap-4 bg-ink/45 px-6 py-3 text-paper backdrop-blur-md transition-colors duration-500 hover:bg-ink/65 aria-expanded:bg-paper aria-expanded:text-ink md:top-6 md:right-8"
+>
+  <span data-menu-label>Menu</span>
+  <span class="text-[18px] leading-none transition-transform duration-500 ease-silk in-aria-expanded:rotate-45" aria-hidden="true">+</span>
+</button>
+
+<a
+  href="/contact/#enquire"
+  class="btn btn-gold fixed right-4 bottom-4 z-[54] shadow-[0_10px_30px_rgb(28_19_13/0.25)] transition-[opacity,background-color] in-data-[menu=true]:pointer-events-none in-data-[menu=true]:opacity-0 md:right-8 md:bottom-7"
+>
+  Book a <em>viewing</em>
+</a>

@@ -1,0 +1,61 @@
+---
+import { Image } from 'astro:assets';
+import mark from '../assets/brand/buhle-mark.png';
+import { nav, site, addressLine, mapsLink, whatsappLink } from '../data/site';
+
+const year = new Date().getFullYear();
+---
+
+<footer class="relative overflow-hidden bg-ink pt-24 pb-32 text-paper/80 md:pb-16" data-tone="dark">
+  <div class="mx-auto max-w-[1500px] px-5 md:px-14">
+    <div class="grid gap-14 md:grid-cols-12">
+      <div class="md:col-span-5">
+        <a href="/" class="inline-flex items-center gap-4" aria-label="Buhle Country Estate, home">
+          <Image src={mark} alt="" width={72} height={72} class="size-16" />
+          <span class="flex flex-col leading-none text-paper" aria-hidden="true">
+            <span class="font-display text-[34px] tracking-[0.18em] uppercase">Buhle</span>
+            <span class="caps mt-1.5 text-[10px]! tracking-[0.55em]!">Country Estate</span>
+          </span>
+        </a>
+        <p class="mt-7 max-w-[38ch] text-[16px]">
+          A private wedding, function and conference venue in the Bishopstowe countryside, {site.minutesFromCity} minutes from Pietermaritzburg.
+        </p>
+        <div class="mt-8 flex flex-wrap gap-3">
+          <a href="/contact/#enquire" class="btn btn-gold">Make an <em>enquiry</em></a>
+          <a href={whatsappLink()} class="btn btn-line text-paper" rel="noopener" target="_blank">WhatsApp</a>
+        </div>
+      </div>
+
+      <nav class="md:col-span-3" aria-label="Footer">
+        <p class="caps text-gold">Explore</p>
+        <ul class="mt-4 grid grid-cols-2 gap-x-6 gap-y-2 text-[15px] md:grid-cols-1">
+          {nav.map((n) => <li><a href={n.href} class="inline-block py-1 hover:text-gold-light">{n.label}</a></li>)}
+        </ul>
+      </nav>
+
+      <div class="md:col-span-4">
+        <p class="caps text-gold">Visit &amp; contact</p>
+        <address class="mt-4 text-[15px] not-italic">
+          <a href={mapsLink} class="hover:text-gold-light" rel="noopener" target="_blank">{addressLine}</a>
+        </address>
+        <ul class="mt-4 space-y-1 text-[15px]">
+          {site.phones.map((p) => <li><a href={`tel:${p.tel}`} class="inline-block py-1 hover:text-gold-light">{p.display}</a></li>)}
+          <li><a href={`mailto:${site.email}`} class="inline-block py-1 hover:text-gold-light">{site.email}</a></li>
+        </ul>
+        <p class="caps mt-8 text-gold">Follow</p>
+        <div class="mt-3 flex gap-6">
+          <a href={site.socials.facebook} class="caps hover:text-gold-light" rel="noopener" target="_blank">Facebook</a>
+          <a href={site.socials.instagram} class="caps hover:text-gold-light" rel="noopener" target="_blank">Instagram</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Oversized wordmark, sized by viewport so it runs edge to edge -->
+    <p class="display pointer-events-none mt-20 text-center text-[19vw] leading-[0.8] text-paper/[0.06] select-none md:text-[17vw]" aria-hidden="true">Buhle</p>
+
+    <div class="mt-6 flex flex-col gap-3 border-t border-paper/15 pt-6 text-[13px] text-paper/60 md:flex-row md:justify-between">
+      <p>© {year} Buhle Country Estate. All rights reserved.</p>
+      <p>Affiliated to Mkhumbi Creative Solutions: government catering, events &amp; office meetings.</p>
+    </div>
+  </div>
+</footer>

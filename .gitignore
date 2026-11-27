@@ -1,0 +1,7 @@
+node_modules
+dist
+.astro
+# Raw photo library (the site uses the curated copies in src/assets/photos)
+media/
+# Local editor/preview settings
+.claude/
